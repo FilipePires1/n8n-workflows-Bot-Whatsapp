@@ -1,0 +1,1082 @@
+{
+  "name": "Reenvio Confirmacao Aluguel",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "18o3kLoMQ8-yzI-6PXRa-Kj9NSMpbHUPNBP15lqmVI9k",
+          "mode": "list",
+          "cachedResultName": "Formulario s/ verificacao (respostas)",
+          "cachedResultUrl": "..Sua Pasta do Google Sheets.."
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1691336896,
+          "mode": "list",
+          "cachedResultName": "Respostas ao formulário 1",
+          "cachedResultUrl": "..Sua Pasta do Google Sheets.."
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1344,
+        400
+      ],
+      "id": "9a9ec61b-ddd5-4467-b878-04edf9948b11",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "yLhGWLccCBKr7xF4",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "..Seu Link da API do Whatsapp (utilizei o z-api)",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "client-token",
+              "value": "..Seu Client Token.."
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"phone\": \"55{{ $json.celular.toString().replace(/\\D/g, '') }}\",\n  \"message\": \"Olá {{ $json.cliente }}!\\n\\nCpf: {{ $json.cpf }}\\n\\nSeu aluguel foi confirmado ✅\\n\\n👗 Vestido: {{ $json.vestido }}\\n\\n📅 Festa: {{ $json.data_festa }}\\n\\n🔄 Devolução: {{ $json.data_devolucao }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -448,
+        400
+      ],
+      "id": "95c90f00-acee-4765-83a3-da4948a14987",
+      "name": "HTTP Request",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5c40d1dc-d3a6-4605-bb70-e051d1f6d2b7",
+              "name": "=cliente",
+              "value": "={{ $json[\"Nome Completo\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "880a666f-3005-4de7-b78c-7acc695d72da",
+              "name": "=celular",
+              "value": "={{ $json[\"Telefone Whatsapp\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "eabb1e9a-a287-44a0-9caa-6991601a7428",
+              "name": "=cpf",
+              "value": "={{ $json[\"CPF\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "5075d93f-b378-422b-acae-08aeff1ec30a",
+              "name": "=vestido",
+              "value": "={{ $json[\"Número do vestido\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "ea731ae9-dfba-416e-8214-b8baad9bd8bb",
+              "name": "=data_festa",
+              "value": "={{ $json[\"Data da festa\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "31684069-08cb-4f41-9129-a95f5757ba6a",
+              "name": "=data_devolucao",
+              "value": "={{ $json[\"Data de devolução\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -768,
+        400
+      ],
+      "id": "d6154c4c-be0c-443b-933a-cb66718c1149",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1344,
+        768
+      ],
+      "id": "f90a9d6e-15b9-48b4-a490-3d79c6d44d7a",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "18o3kLoMQ8-yzI-6PXRa-Kj9NSMpbHUPNBP15lqmVI9k",
+          "mode": "list",
+          "cachedResultName": "Formulario s/ verificacao (respostas)",
+          "cachedResultUrl": "..Sua Pasta do Google Sheets.."
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1691336896,
+          "mode": "list",
+          "cachedResultName": "Respostas ao formulário 1",
+          "cachedResultUrl": "..Sua Pasta do Google Sheets.."
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1056,
+        768
+      ],
+      "id": "a56ce410-f907-4e1a-a9d8-fdfe78d6b5fd",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleApi": {
+          "id": "sXEPGaX9s8Ym5F0P",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e354962a-7be2-43ab-be88-f5b9cd27c784",
+              "leftValue": "=={{ $json[\"dataDevoucao\"] }}",
+              "rightValue": "=={{ $json[\"hoje\"] }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "a2681f40-701d-4fef-bdcc-7bdb05d8732c",
+              "leftValue": "Data de devolução",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "781f75f0-ee54-4d0e-9c60-1998c649b028",
+              "leftValue": "Telefone Whatsapp",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        -656,
+        768
+      ],
+      "id": "038e1281-bfcd-4078-bf8c-79dc00244459",
+      "name": "Filter",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "..Seu link da API do Whatsapp..t",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "client-token",
+              "value": "..Seu client Token (utilizando z-api).."
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "phone",
+              "value": "=={{ $json[\"Telefone Whatsapp\"].toString() }}"
+            },
+            {
+              "name": "message",
+              "value": "=Olá, {{ $json[\"Nome Completo\"] }}! 🌸\n\nEste é um lembrete sobre o aluguel do seu vestido (Número: {{ $json[\"Número do vestido\"] }}). \n\nA data de devolução é hoje ({{ $json[\"Data de devolução\"] }}). Lembrando que a entrega no prazo correto evita a cobrança de taxas adicionais de atraso. \n\nFique atento(a) aos nossos horários de funcionamento:\n• De segunda a sexta-feira: recebemos as devoluções até as 18h.\n• Aos sábados: recebemos as devoluções somente até as 13h.\n\nTe esperamos!\n\n(Se você já realizou a devolução, por favor, desconsidere esta mensagem)."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -448,
+        768
+      ],
+      "id": "c721a84d-ce81-4761-b8b0-e3b501647a77",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "8e87fcc8-9025-42fa-a344-a89323a3bb66",
+              "leftValue": "Telefone Whatsapp",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "e258bbc6-169f-410f-95e7-1e26b7547ffc",
+              "leftValue": "={{ $json[\"Nome Completo\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        -1056,
+        400
+      ],
+      "id": "e9fadbd8-74a4-4a22-9ec8-2671bad20013",
+      "name": "Filter1"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-bot",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1344,
+        48
+      ],
+      "id": "21937eb8-c39e-45f9-935e-8f4aa10bf2b0",
+      "name": "Webhook1",
+      "webhookId": "bcef5eef-89c1-46fa-a76a-f839bd77f985"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "..Seu link de API..",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "client-token",
+              "value": "..Seu Client Token (utilizando o z-api).."
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "phone",
+              "value": "={{ $node[\"Webhook1\"].json.body.phone }}"
+            },
+            {
+              "name": "message",
+              "value": "=Olá, {{ $json.body.senderName }}! ✨\n\nBem-vindo(a) à Nome da Loja! 🎀\n\n👗 Catálogo: https://bit.ly/4d6YE2m\n\n⏰ Nossos Horários:\nSegunda a Sexta: 09h às 18h\nSábado: 09h às 13h\n\n📍 Nosso Endereço:\nSeu endereço\n\n👉 Aviso: Em instantes um de nossos atendentes vai te responder manualmente. Até logo!\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a3206117-5c26-4b80-b333-9f287070c806",
+      "name": "Boas vindas1"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1fuqU0YhPlsnly4pG7M6WzP7PAdUgVbQ_O-rmlPf_61M",
+          "mode": "list",
+          "cachedResultName": "Aluguel de trajes juninos",
+          "cachedResultUrl": "..Link da pasta do Google Sheets.."
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1946616662,
+          "mode": "list",
+          "cachedResultName": "Respostas ao formulário 1",
+          "cachedResultUrl": "..Link da pasta do Google Sheets.."
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Telefone Whatsapp",
+              "lookupValue": "={{ $node[\"Webhook1\"].json.body.phone.toString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -800,
+        32
+      ],
+      "id": "7fa31cfb-a192-4c79-97ae-c619233c4c8a",
+      "name": "Get row(s) in sheet5",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleApi": {
+          "id": "sXEPGaX9s8Ym5F0P",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "745184bf-fa61-430e-9a6e-44a5778b486a",
+              "leftValue": "={{ $json.body.phone.toString() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "4dcfdb28-55c2-495c-940a-33d452a41f9e",
+              "leftValue": "={{ $node[\"Webhook1\"].json.body.phone }}",
+              "rightValue": "@g.us",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -272,
+        16
+      ],
+      "id": "f9a13622-d9aa-4ee3-a8e7-a801faa68e64",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "..Seu Link da API do Whatsapp (utilizei o z-api)",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "client-token",
+              "value": "..Seu client token (utilizando o z-api).."
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"phone\": \"{{ $('Google Sheets Trigger').item.json['Telefone Whatsapp'] }}\",\n  \"message\": \"Segue em anexo o nosso contrato e termos de uso do aluguel. 🌸\",\n  \"image\": \"https://cdn-icons-png.flaticon.com/512/337/337946.png\",\n  \"linkUrl\": \"https://docs.google.com/uc?export=download&id=1xor-u9mNSzNFWqaHnt5QULJXvJiMiGdm\",\n  \"title\": \"Contrato de Aluguel\",\n  \"linkDescription\": \"Clique para baixar o PDF\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -192,
+        400
+      ],
+      "id": "ea588213-c2b9-490b-9f05-0127b74f88b4",
+      "name": "Boas vindas"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4dcfdb28-55c2-495c-940a-33d452a41f9e",
+              "leftValue": "={{ $json.body.isGroup }}",
+              "rightValue": "false",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "06bc40f6-b89d-4095-baec-8ffb79bb21ed",
+              "leftValue": "={{ $json.body.text }}",
+              "rightValue": "chat",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "4929175b-f99a-47e5-a2f8-c9c5ba9c0731",
+              "leftValue": "={{ $json.body.audio }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "55f418ac-445e-48be-849b-154337f9b418",
+              "leftValue": "={{ $json.body.image }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "7590ad8a-069f-478d-bb74-d997f98d6cbf",
+              "leftValue": "={{ $json.body.video }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "2185acbd-5e84-40c3-8f47-93b480248bcb",
+              "leftValue": "={{ $json.body.document }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1056,
+        48
+      ],
+      "id": "a28c2c12-c9e8-4226-965c-1df7fb18f440",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1fuqU0YhPlsnly4pG7M6WzP7PAdUgVbQ_O-rmlPf_61M",
+          "mode": "list",
+          "cachedResultName": "Aluguel de trajes juninos",
+          "cachedResultUrl": "..Link da pasta do Google Sheets.."
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1946616662,
+          "mode": "list",
+          "cachedResultName": "Respostas ao formulário 1",
+          "cachedResultUrl": "..Link da pasta do Google Sheets.."
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status_bot": "=suspenso",
+            "Telefone Whatsapp": "={{ $node[\"Webhook1\"].json.body.phone }}"
+          },
+          "matchingColumns": [
+            "Telefone Whatsapp"
+          ],
+          "schema": [
+            {
+              "id": "Telefone Whatsapp",
+              "displayName": "Telefone Whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status_bot",
+              "displayName": "Status_bot",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Coluna 3",
+              "displayName": "Coluna 3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Coluna 4",
+              "displayName": "Coluna 4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Coluna 5",
+              "displayName": "Coluna 5",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Coluna 6",
+              "displayName": "Coluna 6",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Coluna 7",
+              "displayName": "Coluna 7",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Coluna 8",
+              "displayName": "Coluna 8",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "CONTRATO DE LOCAÇÃO DE VESTUÁRIO \n\nCONTRATO DE LOCAÇÃO DE ROUPAS - denominado agora LOCADOR(A)\n\nCláusula 1° - o LOCATÁRIO se compromete a devolver as peças locadas na sede da LOCADORA no dia e hora de término especificada ;\nCláusula 2°- A devolução da peça se dá sempre na segunda feira ate as 18h se a festa for no sábado, ou se a festa for na sexta a devolução será no sábado ate as 13h e sendo a festa durante a semana a entrega é no dia seguinte;\nCláusula 3°- caso o vestuário seja devolvido com excesso de sujeira, perfume ou manchas,  o LOCATÁRIO pagará uma taxa de 20% do valor do aluguel para a limpeza das peças que se encontrarem nessas condições;\nCláusula 4°- caso seja constatada alguma danificação no traje locado no momento da locação, o LOCADOR se compromete a efetuar o conserto, ou troca do traje ou a devida devolução do valor pago, tudo conforme a disponibilidade do produto ou conveniência do LOCADOR;\nCláusula 5°- caso seja ultrapassado a data da devolução estabelecida na cláusula 2 ,  será cobrado uma taxa de 20% do valor do aluguel por dia de atraso,  incluindo dias úteis e final de semana;\nCláusula 6°- se houver qualquer dano aos vestuários, o LOCATÁRIO pagará o valor de conserto especificado pela costureira, conforme o dano;\nCláusula 7°- A não devolução no prazo de 10 (dez) dias será considerada EXTRAVIO ou ROUBO, sendo que o LOCATÁRIO terá que pagar 5 (cinco) vezes o valor do aluguel da peça; \nCláusula 8°- A não devolução de algumas peças serão cobradas separadamente;\nCláusula 9°- É vedado ao LOCATÁRIO transferir,  ceder ou emprestar o(s) vestuário(s) locados a terceiros; \nCláusula 10°- caso haja DESISTÊNCIA  por parte do LOCATÁRIO, o mesmo terá o crédito na loja, e o valor não será devolvido; \nCláusula 11°- os acessórios de cabelo não estão incluídos no valor do aluguel , ficando livre e de escolha do LOCADOR fornecer por cortesia. Em caso de empréstimo,  o LOCATÁRIO não poderá escolher;\nCláusula 12°-  No momento da retirada as partes deverão conferir se todas as peças de vestuário específicas se encontram em bom estado de conservação e higiene, e em caso de danos que não prejudique o uso; \nCláusula 13°-  E por estar em comum acordo marque a opção \"estou ciente\".",
+              "displayName": "CONTRATO DE LOCAÇÃO DE VESTUÁRIO \n\nCONTRATO DE LOCAÇÃO DE ROUPAS denominado agora LOCADOR(A)\n\nCláusula 1° - o LOCATÁRIO se compromete a devolver as peças locadas na sede da LOCADORA no dia e hora de término especificada ;\nCláusula 2°- A devolução da peça se dá sempre na segunda feira ate as 18h se a festa for no sábado, ou se a festa for na sexta a devolução será no sábado ate as 13h e sendo a festa durante a semana a entrega é no dia seguinte;\nCláusula 3°- caso o vestuário seja devolvido com excesso de sujeira, perfume ou manchas,  o LOCATÁRIO pagará uma taxa de 20% do valor do aluguel para a limpeza das peças que se encontrarem nessas condições;\nCláusula 4°- caso seja constatada alguma danificação no traje locado no momento da locação, o LOCADOR se compromete a efetuar o conserto, ou troca do traje ou a devida devolução do valor pago, tudo conforme a disponibilidade do produto ou conveniência do LOCADOR;\nCláusula 5°- caso seja ultrapassado a data da devolução estabelecida na cláusula 2 ,  será cobrado uma taxa de 20% do valor do aluguel por dia de atraso,  incluindo dias úteis e final de semana;\nCláusula 6°- se houver qualquer dano aos vestuários, o LOCATÁRIO pagará o valor de conserto especificado pela costureira, conforme o dano;\nCláusula 7°- A não devolução no prazo de 10 (dez) dias será considerada EXTRAVIO ou ROUBO, sendo que o LOCATÁRIO terá que pagar 5 (cinco) vezes o valor do aluguel da peça; \nCláusula 8°- A não devolução de algumas peças serão cobradas separadamente;\nCláusula 9°- É vedado ao LOCATÁRIO transferir,  ceder ou emprestar o(s) vestuário(s) locados a terceiros; \nCláusula 10°- caso haja DESISTÊNCIA  por parte do LOCATÁRIO, o mesmo terá o crédito na loja, e o valor não será devolvido; \nCláusula 11°- os acessórios de cabelo não estão incluídos no valor do aluguel , ficando livre e de escolha do LOCADOR fornecer por cortesia. Em caso de empréstimo,  o LOCATÁRIO não poderá escolher;\nCláusula 12°-  No momento da retirada as partes deverão conferir se todas as peças de vestuário específicas se encontram em bom estado de conservação e higiene, e em caso de danos que não prejudique o uso; \nCláusula 13°-  E por estar em comum acordo marque a opção \"estou ciente\".",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Forma de pagamento",
+              "displayName": "Forma de pagamento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        240,
+        0
+      ],
+      "id": "f219e486-727e-4cef-b486-d88889ccdf2f",
+      "name": "Append or update row in sheet1",
+      "credentials": {
+        "googleApi": {
+          "id": "sXEPGaX9s8Ym5F0P",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Confirmação de Aluguel\n"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1664,
+        384
+      ],
+      "typeVersion": 1,
+      "id": "158ab4be-2544-417b-98c7-d191e1be406e",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Resposta Automática\n"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1664,
+        32
+      ],
+      "typeVersion": 1,
+      "id": "86370123-6f26-447d-b7c0-42bfef397c4a",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Lembrete de Devolução\n"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1664,
+        752
+      ],
+      "typeVersion": 1,
+      "id": "f8f23781-61a2-4e26-b77e-0c66eabed554",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4dcfdb28-55c2-495c-940a-33d452a41f9e",
+              "leftValue": "={{ $json.Status_bot }}",
+              "rightValue": "suspenso",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -528,
+        32
+      ],
+      "id": "d5265723-411e-4f86-b321-1cd05cc07d26",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const itens = $input.all();\nconst agora = new Date();\nconst dia = String(agora.getDate()).padStart(2, '0');\nconst mes = String(agora.getMonth() + 1).padStart(2, '0');\nconst ano = agora.getFullYear();\nconst hoje = `${dia}/${mes}/${ano}`;\n\nreturn itens.map(item => ({\n  json: {\n    ...item.json,\n    hoje,\n    dataDevoucao: item.json[\"Data de devolução\"]?.toString().trim()\n  }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -848,
+        768
+      ],
+      "id": "6d727689-6ad1-4b2d-a139-ad3929f73044",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1344,
+        1104
+      ],
+      "id": "69d5cdff-20fe-4f02-bb1c-dd66794f5269",
+      "name": "Execute manually"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    \"json\": {\n      \"cliente\": \"Grázia Pimentel Lima Va\",\n      \"celular\": \"31997400456\",\n      \"cpf\": \"08532240640\",\n      \"vestido\": \"22 e 50\",\n      \"data_festa\": \"04/06/2026\",\n      \"data_devolucao\": \"08/06/2026\"\n    }\n  },\n  {\n    \"json\": {\n      \"cliente\": \"Grázia Pimentel Lima Va\",\n      \"celular\": \"31997400456\",\n      \"cpf\": \"08532240640\",\n      \"vestido\": \"404\",\n      \"data_festa\": \"04/07/2026\",\n      \"data_devolucao\": \"06/07/2026\"\n    }\n  },\n  {\n    \"json\": {\n      \"cliente\": \"Marcela Azevedo Igino\",\n      \"celular\": \"31989796387\",\n      \"cpf\": \"06434143630\",\n      \"vestido\": \"Conjunto 70\",\n      \"data_festa\": \"06/06/2026\",\n      \"data_devolucao\": \"08/06/2026\"\n    }\n  },\n  {\n    \"json\": {\n      \"cliente\": \"Marcela Azevedo Igino\",\n      \"celular\": \"31989796387\",\n      \"cpf\": \"06434143630\",\n      \"vestido\": \"Conjunto 64\",\n      \"data_festa\": \"11/07/2026\",\n      \"data_devolucao\": \"13/07/2026\"\n    }\n  },\n  {\n    \"json\": {\n      \"cliente\": \"Talles Douglas Marçal d\",\n      \"celular\": \"31971293260\",\n      \"cpf\": \"10906920647\",\n      \"vestido\": \"Saia 12\",\n      \"data_festa\": \"29/05/2026\",\n      \"data_devolucao\": \"30/05/2026\"\n    }\n  },\n  {\n    \"json\": {\n      \"cliente\": \"Ester Vasconcellos\",\n      \"celular\": \"5531993806567\",\n      \"cpf\": \"12264553600\",\n      \"vestido\": \"63\",\n      \"data_festa\": \"04/07/2026\",\n      \"data_devolucao\": \"06/07/2026\"\n    }\n  },\n  {\n    \"json\": {\n      \"cliente\": \"Renalice Campelo Freita\",\n      \"celular\": \"31986647507\",\n      \"cpf\": \"01274688620\",\n      \"vestido\": \"Conjunto 04\",\n      \"data_festa\": \"04/07/2026\",\n      \"data_devolucao\": \"06/07/2026\"\n    }\n  },\n  {\n    \"json\": {\n      \"cliente\": \"Suzana Ambrósio Pereir\",\n      \"celular\": \"31987381136\",\n      \"cpf\": \"07866137692\",\n      \"vestido\": \"207\",\n      \"data_festa\": \"29/05/2026\",\n      \"data_devolucao\": \"30/05/2026\"\n    }\n  },\n  {\n    \"json\": {\n      \"cliente\": \"Maria Tereza Louros Fer\",\n      \"celular\": \"5531985570596\",\n      \"cpf\": \"06813725670\",\n      \"vestido\": \"Saia 50\",\n      \"data_festa\": \"06/06/2026\",\n      \"data_devolucao\": \"08/06/2026\"\n    }\n  },\n  {\n    \"json\": {\n      \"cliente\": \"Ariela guidine\",\n      \"celular\": \"31987573996\",\n      \"cpf\": \"07872359626\",\n      \"vestido\": \"246\",\n      \"data_festa\": \"29/05/2026\",\n      \"data_devolucao\": \"30/05/2026\"\n    }\n  },\n  {\n    \"json\": {\n      \"cliente\": \"Natália Bicalho de Melo\",\n      \"celular\": \"33988374373\",\n      \"cpf\": \"07806784608\",\n      \"vestido\": \"243/ 251\",\n      \"data_festa\": \"19/06/2026\",\n      \"data_devolucao\": \"23/06/2026\"\n    }\n  },\n  {\n    \"json\": {\n      \"cliente\": \"Patrícia de Souza Prado\",\n      \"celular\": \"31985163929\",\n      \"cpf\": \"06931885618\",\n      \"vestido\": \"115\",\n      \"data_festa\": \"29/05/2026\",\n      \"data_devolucao\": \"30/05/2026\"\n    }\n  },\n  {\n    \"json\": {\n      \"cliente\": \"Francyelle Raianne Pinh\",\n      \"celular\": \"3197574755\",\n      \"cpf\": \"11409904628\",\n      \"vestido\": \"218\",\n      \"data_festa\": \"30/05/2026\",\n      \"data_devolucao\": \"01/06/2026\"\n    }\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1104,
+        1104
+      ],
+      "id": "7a2b8a94-d959-4f6a-9fa1-c9e2fcc0db9f",
+      "name": "Clientes"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "..Seu client Token (utilizando z-api)..",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "client-token",
+              "value": "..Seu client token (utilizando o z-api).."
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"phone\": \"55{{ $json.celular.toString().replace(/\\D/g, '') }}\",\n  \"message\": \"Olá {{ $json.cliente }}!\\n\\nCpf: {{ $json.cpf }}\\n\\nSeu aluguel foi confirmado ✅\\n\\n👗 Vestido: {{ $json.vestido }}\\n\\n📅 Festa: {{ $json.data_festa }}\\n\\n🔄 Devolução: {{ $json.data_devolucao }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -864,
+        1104
+      ],
+      "id": "87440b07-3f71-4256-8733-53a3f4d74cdb",
+      "name": "Msg Confirmacao"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "..Seu link de API (utilizei o z-api)..",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "client-token",
+              "value": "..Seu client token (utilizando o z-api).."
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"phone\": \"55{{ $json.celular.toString().replace(/\\D/g, '') }}\",\n  \"message\": \"Segue em anexo o nosso contrato e termos de uso do aluguel. 🌸\",\n  \"image\": \"https://cdn-icons-png.flaticon.com/512/337/337946.png\",\n  \"linkUrl\": \"https://docs.google.com/uc?export=download&id=1xor-u9mNSzNFWqaHnt5QULJXvJiMiGdm\",\n  \"title\": \"Contrato de Aluguel\",\n  \"linkDescription\": \"Clique para baixar o PDF\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -624,
+        1104
+      ],
+      "id": "53e62392-2783-4a6f-b14c-faa5bdb30e4c",
+      "name": "Msg Contrato"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Filter1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Boas vindas1": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet5": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Boas vindas1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Boas vindas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute manually": {
+      "main": [
+        [
+          {
+            "node": "Clientes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clientes": {
+      "main": [
+        [
+          {
+            "node": "Msg Confirmacao",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Msg Confirmacao": {
+      "main": [
+        [
+          {
+            "node": "Msg Contrato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "e6f6ae46-ac54-4851-83ac-5b6e648e3955",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "725b3710f9292cfe20a624a3e8d548eae783dba23aa56aa723db6c8c932e4011"
+  },
+  "id": "1kMvv5FSvke0z6c2",
+  "tags": []
+}
